@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/styleSudoku.css">
+    <link rel="stylesheet" href="./css/styleTable.css">
+    <title>Code Portfolio</title>
+</head>
+<body>
+    <div id="textRuler">Place Holder</div>
+    <div id="navBar" class="navBar">
+        <button id="button_sudoku" class="button">Sudoku</button>
+        <button id="button_table" class="button">Table</button>
+    </div>
+
+    <div id="sudokuHide">
+        <div id="sudokuContainer" class="sudokuContainer">
+            <div id="sudokuBoard" class="sudokuBoard"></div>
+            <div>
+                <button id="sudokuRunButton" class="button">Create Board</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dataTableHide">
+        <div id="dataTableContainer">
+            <div id="dataTableHeader">
+                <span id="dataTableTitle">Customer Info</span>
+                <span>
+                    <span>Displaying</span>
+                    <select name="perPage" id="perPageSelect">
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span>per page.</span>
+                </span>
+            </div>
+            <div id="dataTable" class="dataTable"></div>
+        </div>
+    </div>
+
+    <div id="primesContainer"></div>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>

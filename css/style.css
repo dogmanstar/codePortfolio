@@ -1,0 +1,38 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+pre {
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.navBar {
+  margin: 40px;
+  padding: 0;
+  display: flex;
+}
+
+.button {
+  height: 40px;
+  flex: 1;
+  margin: 5px;
+  font-size: 1em;
+  background-color: rgba(172, 220, 234, 1);
+  border: 3px solid #000;
+  border-radius: 6px;
+}
+
+#textRuler {
+  position: absolute;
+  top: -500px;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+  /* visibility: hidden; */
+  display: inline-block;
+  white-space: nowrap;
+}
+

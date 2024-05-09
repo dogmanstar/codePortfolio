@@ -1,0 +1,75 @@
+/* ---Sudoku classes---------------- */
+.sudokuContainer {
+    display: grid;
+    place-items: center;
+    /* height: 100vh; */
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .sudokuBoard {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    border: 1px solid #000;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    box-sizing: border-box;
+  }
+  
+  .sb_cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.3em;
+    height: 60px;
+    width: 60px;
+    border: 1px solid #000;
+    color: #000;
+    word-wrap: break-word;
+    box-sizing: border-box;
+  }
+  
+  .sb_unSolved {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 60px;
+    width: 60px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+  }
+  
+  .sb_possible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .9em;
+    color: #000;
+  }
+  
+  .given {
+    font-size: 2em;
+    background-color: #f0f0f0;
+    color: #000; /* Font color */
+  }
+  
+  .sb_thickleft {
+    border-left-width: 3px;
+  }
+  
+  .sb_thickTop {
+    border-top-width: 3px;
+  }
+  
+  .sb_hide {
+    color: rgba(0, 0, 0, 0);
+  }
+  
+  .sb_pink {
+    background-color: pink;
+  }
+  
+  .sb_red {
+    background-color: coral;
+  }
