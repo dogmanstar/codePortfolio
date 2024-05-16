@@ -10,13 +10,17 @@ class CreateSolutionBoard {
         this.initProps();
     }
     
+    // Set up CreateSolutinBoard object on init
     initProps() {
+        // Init array of Cell objs
         let arr = [];
         for (let i = 0; i < 81; i++) {
             let cell = new Cell(i);
             arr.push(cell);
         }
         this.cellArr = arr;
+        // Create lookup lists for row, col, block
+        // All lists are zero indexed
         for (let i = 0; i < 81; i++) {
             let row = Math.floor(i / 9);
             if (this.rowList[row]) {
@@ -39,12 +43,16 @@ class CreateSolutionBoard {
         }
     }
 
+    // Entry point to create a new solution board
     makeBoard() {
         let index = 0;
         let board = structuredClone(this.cellArr);
 
-        board = this.setCellRecursive(index, board);
+        this.setCellRecursive(index, board);
+
+        // Save frames for return (array of FrameObjects)
         let steps = this.animationStepsArr;
+        // Reset for next use of makeBoard()
         this.animationStepsArr = [];
 
         return steps;
@@ -56,24 +64,28 @@ class CreateSolutionBoard {
         while (board[index].num !== undefined) {
             index += 1;
         }
-        // console.log("working on", index, "in setCell");
-        // Loop over board[index].poss until none left
+        // Select a number from possible array
+        // If no solution remove from possible and select a new number from remaining
         while (board[index].poss.length > 0) {
             // Select a num from poss. remove from poss but don't set num
             let selected = this.selectAndRemove(index, board);
             let boardCopy = structuredClone(board);
             // Set num to selected on boardCopy
             boardCopy[index].num = selected;
-            // Remove selected from board[x].poss
+            // Remove selected from board[index].poss
             boardCopy = this.removeSelectedFromPoss(index, boardCopy);
             if (boardCopy === undefined) continue;
 
+            // Look for one possible left in poss list of remaining cells
+            // if one poss found jump into recursivly looking for one poss left
+            // final cell is always found by this functin. Returns "done" when last cell is filled
             let indexOfOne = this.indexOfCellWithOnePoss(boardCopy);
             if (indexOfOne > -1) {
                 boardCopy = this.handleOnePossRecursive(indexOfOne, boardCopy);
                 if (boardCopy === undefined) continue;
             }
             
+            // Recursive call if one poss left is not found
             if (boardCopy !== "done") {
                 boardCopy = this.setCellRecursive(index + 1, boardCopy);
                 if (boardCopy === undefined) continue;
@@ -83,6 +95,10 @@ class CreateSolutionBoard {
         return undefined;
     }
     
+    // Remove the selected number at board[index] from all cells in related
+    // row, col, block.
+    // Takes a snapshot of the board state and pushes to this.animationStepsArr for animation
+    // Returns undefined if an empty possible list is found (no solution possible)
     removeSelectedFromPoss(index, board) {
         let remove = board[index].num;
         let cellList = this.getConnectedIndices(board[index]);
@@ -94,15 +110,16 @@ class CreateSolutionBoard {
                 }
             }
         }
-        //Take snapShot here
         let snap = this.takeSnapShot(index, board);
         this.animationStepsArr.push(snap);
         if (this.hasZeroPoss(board)) return undefined;
         return board;
     }
     
+    // When one poss is found, fucntion sets cell at index to the number
+    // Removes number from related cells in row, col, block
+    // Return board with single poss resolved, or undfined for no solution, or "done"
     handleOnePossRecursive(index, board) {
-        // console.log("working on", index, "in handleOne");
         let boardCopy = structuredClone(board);
         boardCopy[index].num = board[index].poss[0];
         boardCopy = this.removeSelectedFromPoss(index, boardCopy);
@@ -142,18 +159,22 @@ class CreateSolutionBoard {
         return foundZero;
     }
 
+    // Randomly select a number out of the remaining possible list
     selectAndRemove(index, board) {
         let pIndex = Math.floor(randDecimal() * board[index].poss.length);
         let [x] = board[index].poss.splice(pIndex, 1);
         return x;
     }
 
+    // Creates a new FrameObj of board state for animation
     takeSnapShot(index, board) {
         let arr = this.getConnectedIndices(board[index]);
         let frame = new FrameObj(index, board, arr);
-        return frame; // Needs to send to array instead of return
+        return frame;
     }
 
+    // Helper function for takeSnapShot() makes list of all connected
+    // cells in row, col, block. Used for hilighting connected in animation
     getConnectedIndices(cell) {
         let rcb_set = new Set();
         let rbc = [...this.rowList[cell.row]]

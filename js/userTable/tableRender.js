@@ -1,7 +1,7 @@
 export { TableRender };
 
 
-const COL_ORDER_CONST = [
+const COL_ORDER_CONST = [ // Sets shown props and default order of columns
     "id",
     "firstName",
     "lastName",
@@ -15,7 +15,7 @@ const COL_ORDER_CONST = [
     "purchaseList",
     "note"
 ];
-const COL_TITLE_KEYS_CONST = {
+const COL_TITLE_KEYS_CONST = { // List to map props to shown column title
     "id": "ID",
     "firstName": "First Name",
     "lastName": "Last Name",
@@ -30,7 +30,7 @@ const COL_TITLE_KEYS_CONST = {
     "note": "Notes"
 };
 
-const COL_ABS_MIN = 50;
+const COL_ABS_MIN = 50; // Absolute minimum width of columns
 
 class TableRender {
     constructor() {
@@ -58,6 +58,8 @@ class TableRender {
     get pageMax() {
         return Math.ceil(this.dataArr.length / this.perPage);
     }
+
+    // Event handlers------------------------------
 
     handleClick(event) {
         let id = event.target.id;
@@ -132,41 +134,35 @@ class TableRender {
         this.renderTable();
     }
     
+    // Takes in a new data set, expects an array of objects
+    // Finds min size of data for each column
     storeNewDataArr(data) {
         this.dataArrConst = data;
         this.dataArr = this.dataArrConst;
         this.findColMinTitlePxLengths();
         this.findDataMinWidth();
-        // console.log(this.titleMinWidth, "titleMinWidth");
-        // console.log(this.dataMinWidth, "dataMinWidth");
         this.calcColSizes();
         this.renderTable();
     }
     
+    // Calculates column width dependent on width of table
     calcColSizes() {
         let fixedSizeCol = this.makeListOfFixedSize();
-        console.log('fixedSizeCol',fixedSizeCol);
         let variableSizeCol = this.makeListOfVariableSize(fixedSizeCol).sort((a,b) => {
             return a[1] - b[1];
         });
-        console.log('variableSizeCol', variableSizeCol);
-
 
         let availablePx = this.calcTableWidth();
-        console.log('availablePx', availablePx);
         
         this.colSizeObj = {};
         fixedSizeCol.forEach((prop) => {
             this.colSizeObj[prop] = COL_ABS_MIN;
             availablePx -= COL_ABS_MIN;
         });
-        console.log('colSizeOby set fixed', this.colSizeObj);
-        console.log('availablePx after', availablePx);
 
         let totalVarMin = variableSizeCol.reduce((total, item) => {
             return total + item[1];
         }, 0);
-        console.log(totalVarMin);
 
         if (totalVarMin < availablePx) {
             let addToEach = Math.floor((availablePx - totalVarMin) / variableSizeCol.length);
@@ -180,9 +176,6 @@ class TableRender {
                     availablePx -= 1;
                 }
             });
-            console.log("final mins", this.colSizeObj);
-            let finalTotal = Object.values(this.colSizeObj).reduce((acc, val) => acc + val, 0);
-            console.log("final total", finalTotal);
         }
         this.colOrder.forEach((prop) => {
             let percent = Number.parseFloat((this.colSizeObj[prop] / this.calcTableWidth()) * 100).toFixed(3) + "%";
@@ -190,14 +183,7 @@ class TableRender {
         })
     }
 
-    allMinsGreaterThanAve(minObj, average) {
-        let allGreater = false;
-        this.colOrder.forEach((prop) => {
-            if (minObj[prop] > average) allGreater = true;
-        });
-        return allGreater;
-    }
-
+    // Finds fixed size columns and columns set to "icon" returns them as array
     makeListOfFixedSize() {
         let fixedSizeCol = ["purchaseList", "note"];
         this.colOrder.forEach((prop) => {
@@ -207,6 +193,8 @@ class TableRender {
         });
         return fixedSizeCol;
     }
+
+    // Makes 2d array of variable size columns and their min size, format: [col, min]
     makeListOfVariableSize(fixed) {
         let variableSizeCol = this.colOrder.filter((col) => {
             if (!fixed.includes(col)) {
@@ -222,6 +210,7 @@ class TableRender {
         return varSizeWithMins;
     }
 
+    // Finds the availalbe width for table
     calcTableWidth() {
         let tWidth = this.tableDiv.clientWidth;
         let computedStyles = window.getComputedStyle(this.tableDiv);
@@ -231,6 +220,8 @@ class TableRender {
         return tWidth;
     }
 
+    // Finds min width of col Title splits on " " and finds longest word.
+    // Sets this.titleMinWidth obj
     findColMinTitlePxLengths() {
         let ruler = document.querySelector('#textRuler');
         let titleMin = {};
@@ -244,10 +235,10 @@ class TableRender {
             });
             titleMin[prop] = max;
         });
-        console.log(titleMin, "titleMin")
         this.titleMinWidth = titleMin;
     }
 
+    // Finds data min widths by prop. Sets this.dataMinWidth obj
     findDataMinWidth() {
         let ruler = document.querySelector('#textRuler');
         let minLeng = {};
@@ -318,10 +309,10 @@ class TableRender {
             }
             minLeng[prop] = max + 8;
         });
-        console.log(minLeng, 'minLeng');
         this.dataMinWidth = minLeng;
     }
 
+    // Clears and rerenders the table
     renderTable() {
         while (this.tableDiv.firstChild) {
             this.tableDiv.removeChild(this.tableDiv.firstChild);
@@ -349,6 +340,8 @@ class TableRender {
         
     }
 
+    // Creates a row element and fill it with data
+    // Gives td elements an ID in the format: [prop]_[obj.id]
     renderRow(obj) {
         let row = document.createElement('tr');
         this.colOrder.forEach((prop) => {
@@ -440,10 +433,8 @@ class TableRender {
         return row;
     }
 
-    capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      }
-
+    // Creates a tr element filled with th elements
+    // Gives th elements an ID in the format: th_[prop]
     renderTableHead(head) {
         let row = head.insertRow();
         this.colOrder.forEach((prop) => {
@@ -456,13 +447,15 @@ class TableRender {
             row.appendChild(th);
         });
     }
-
+    
+    // Creates a div to act as table foot. Fills with clickable elements for pagination
+    // Clickable elements have ID in the format: page_[num] or page_[action]
     renderTableFoot(foot) {
         foot.id = "tableFoot";
-
+        
         let lDiv = document.createElement('div');
         foot.appendChild(lDiv);
-
+        
         let first = document.createElement('img');
         first.id = "page_first";
         first.classList.add("footSVG");
@@ -470,7 +463,7 @@ class TableRender {
         first.alt = "Page First Arrow";
         first.title = "Page First";
         lDiv.appendChild(first);
-
+        
         let left = document.createElement('img');
         left.id = "page_left";
         left.classList.add("footSVG");
@@ -478,14 +471,14 @@ class TableRender {
         left.alt = "Page Left Arrow";
         left.title = "Page Left";
         lDiv.appendChild(left);
-
+        
         let pageNumsDiv = document.createElement('div');
         foot.appendChild(pageNumsDiv);
-
+        
         let pageDiv = document.createElement('div');
         pageDiv.innerText = "Page:";
         pageNumsDiv.appendChild(pageDiv);
-
+        
         for (let i = 1; i <= this.pageMax; i++) {
             let div = document.createElement('div');
             div.id = `page_${i}`;
@@ -496,7 +489,7 @@ class TableRender {
         
         let rDiv = document.createElement('div');
         foot.appendChild(rDiv);
-
+        
         let right = document.createElement('img');
         right.id = "page_right";
         right.classList.add("footSVG")
@@ -504,7 +497,7 @@ class TableRender {
         right.alt = "Page Right Arrow";
         right.title = "Page Right";
         rDiv.appendChild(right);
-
+        
         let last = document.createElement('img');
         last.id = "page_max";
         last.classList.add("footSVG");
@@ -512,5 +505,9 @@ class TableRender {
         last.alt = "Page Max Arrow";
         last.title = "Page Max";
         rDiv.appendChild(last);
+    }
+
+    capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 }

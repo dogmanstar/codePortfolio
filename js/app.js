@@ -5,13 +5,13 @@ import { Primes } from "./primes/primeFinders.js";
 import { userArr } from "./userTable/randUserList.js";
 import { TableRender } from "./userTable/tableRender.js";
 
-let solution = new CreateSolutionBoard();
-let renObj = new RenderSudokuObj();
+const solution = new CreateSolutionBoard();
+const renObj = new RenderSudokuObj();
 
-let tableRender = new TableRender();
+const tableRender = new TableRender();
 tableRender.storeNewDataArr(userArr);
 
-let sudokuRunButton = document.querySelector('#sudokuRunButton');
+const sudokuRunButton = document.querySelector('#sudokuRunButton');
 sudokuRunButton.addEventListener('click', () => {
     let board = solution.makeBoard();
     renObj.renderStack(board);

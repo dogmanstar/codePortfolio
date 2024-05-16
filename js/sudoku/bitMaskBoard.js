@@ -96,7 +96,7 @@ function cleanPosible(index, selected, array) {
     if (array.indexOf(0) > -1) {
         return undefined;
     }
-    // Make frame here
+
     for (let i = 0; i < array.length; i++) {
         if (i < 0) continue;
         if (reverseTwoPows[array[i]] !== undefined) {
@@ -107,27 +107,6 @@ function cleanPosible(index, selected, array) {
     }
     return array;
 }
-
-// function cleanPosible(index, selected, array) {
-//     let row = Math.floor(index / 9);
-//     let col = index % 9;
-//     let block = (3 * Math.floor(row / 3)) + Math.floor(col / 3);
-//     // Remove from row
-//     for (let i = 1; i + (index % 9) < 9; i++) {
-//         array[index + i] = array[index + i] & notByVals[selected];
-//     }
-//     // Remove from col
-//     for (let i = index + 9; i < 81; i += 9) {
-//         array[i] = array[i] & notByVals[selected];
-//     }
-//     // Remove from block
-//     for (let i = 0; i < 9; i++) {
-//         let index2 = blockList[block][i];
-//         if (index2 > index) {
-//             array[index2] = array[index2] & notByVals[selected];
-//         }
-//     }
-// }
 
 // Returns an array of numbers still available
 function findPossible(num) {

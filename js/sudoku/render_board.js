@@ -29,7 +29,7 @@ class RenderSudokuObj {
     renderStack(arrayOfFrames) {
         for (let i = 0; i <= arrayOfFrames.length; i++) {
             setTimeout(() => {
-                if (i === arrayOfFrames.length) { // Extra iteration to clear red and pink backgroungs
+                if (i === arrayOfFrames.length) { // Extra iteration to clear red and pink backgrounds
                     let arr = [...this.sudokuBoard.children];
                     arr.forEach((child) => {
                         child.classList.remove("sb_pink");
@@ -42,6 +42,7 @@ class RenderSudokuObj {
         }
     }
     
+    // Render board state from FramObj. Set background color of related cells
     renderFrame(frameFromStack) {
         let frame = frameFromStack;
         this.clearSudokuDiv();
@@ -81,6 +82,7 @@ class RenderSudokuObj {
         }
     }
 
+    // Creates an array of divs and adds styling for boarders
     makeDivArr () {
         let arr = [];
         for (let i = 0; i < 81; i++) {
